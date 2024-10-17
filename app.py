@@ -51,7 +51,7 @@ if st.session_state.flag_uploaded == None:
 
 @st.cache_data(show_spinner=False)
 def file_upload():
-    if 'retriever' in st.session_state:
+    if 'retriever' in st.session_state and 'vectorstore' in st.session_state:
         del st.session_state['retriever']
         del st.session_state['vectorstore']
     documents = []
