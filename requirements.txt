@@ -5,4 +5,4 @@ langchain-text-splitters
 sentence_transformers
 langchain_huggingface
 langchain_chroma
-protobuf==3.20.3
+faiss-cpu
