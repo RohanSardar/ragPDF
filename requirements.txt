@@ -1,6 +1,7 @@
 langchain
 langchain_community
 pypdf
+langchain-groq
 langchain-text-splitters
 sentence_transformers
 langchain_huggingface
