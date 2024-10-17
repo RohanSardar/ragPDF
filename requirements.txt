@@ -6,3 +6,4 @@ sentence_transformers
 langchain_huggingface
 langchain_chroma
 streamlit
+protobuf==3.20.x
