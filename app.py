@@ -51,6 +51,9 @@ if st.session_state.flag_uploaded == None:
 
 @st.cache_data(show_spinner=False)
 def file_upload():
+    if 'retriever' in st.session_state:
+        del st.session_state['retriever']
+        del st.session_state['vectorstore']
     documents = []
     for pdf in pdfs:
         with st.sidebar.status('Reading PDFs'):
