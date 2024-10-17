@@ -17,12 +17,12 @@ st.set_page_config(page_title='PDF RAG', page_icon='⛓️', initial_sidebar_sta
 
 @st.cache_resource(show_spinner=False)
 def setup_environment():
-    os.environ["LANGCHAIN_API_KEY"] = st.secrets("LANGCHAIN_API_KEY")
+    os.environ["LANGCHAIN_API_KEY"] = st.secrets["LANGCHAIN_API_KEY"]
     os.environ["LANGCHAIN_TRACING_V2"] = "true"
     os.environ["LANGCHAIN_PROJECT"] = "ragPDF"
 
-    groq_api_key = st.secrets("GROQ_API_KEY")
-    os.environ['HF_TOKEN'] = st.secrets('HF_TOKEN')
+    groq_api_key = st.secrets["GROQ_API_KEY"]
+    os.environ['HF_TOKEN'] = st.secrets['HF_TOKEN']
 
     embeddings = HuggingFaceEmbeddings(model_name='Craig/paraphrase-MiniLM-L6-v2')
 
