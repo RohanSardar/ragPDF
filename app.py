@@ -37,6 +37,10 @@ def setup_environment():
     st.title('🤖ChatBot with RAG on PDF📘')
 
     model = ChatGroq(groq_api_key=groq_api_key, model_name='llama3-8b-8192')
+    if 'flag_uploaded' not in st.session_state:
+        st.session_state.flag_uploaded = None
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = ChatMessageHistory()
 
     return model, embeddings
 
