@@ -15,6 +15,11 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 st.set_page_config(page_title='PDF RAG', page_icon='⛓️', initial_sidebar_state='expanded')
 
+if 'flag_uploaded' not in st.session_state:
+        st.session_state.flag_uploaded = None
+if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = ChatMessageHistory()
+
 @st.cache_resource(show_spinner=False)
 def setup_environment():
     os.environ["LANGCHAIN_API_KEY"] = st.secrets["LANGCHAIN_API_KEY"]
@@ -32,12 +37,6 @@ def setup_environment():
     st.title('🤖ChatBot with RAG on PDF📘')
 
     model = ChatGroq(groq_api_key=groq_api_key, model_name='llama3-8b-8192')
-
-    if 'chat_history' not in st.session_state:
-        st.session_state.chat_history = ChatMessageHistory()
-
-    if 'flag_uploaded' not in st.session_state:
-        st.session_state.flag_uploaded = None
 
     return model, embeddings
 
