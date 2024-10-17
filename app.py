@@ -17,8 +17,6 @@ st.set_page_config(page_title='PDF RAG', page_icon='⛓️', initial_sidebar_sta
 
 @st.cache_resource(show_spinner=False)
 def setup_environment():
-    load_dotenv()
-
     os.environ["LANGCHAIN_API_KEY"] = st.secrets("LANGCHAIN_API_KEY")
     os.environ["LANGCHAIN_TRACING_V2"] = "true"
     os.environ["LANGCHAIN_PROJECT"] = "ragPDF"
