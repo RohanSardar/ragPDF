@@ -15,6 +15,15 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 st.set_page_config(page_title='PDF RAG', page_icon='⛓️', initial_sidebar_state='expanded')
 
+if 'initial_cleanup' not in st.session_state:
+    for key in st.session_state.keys():
+        del st.session_state[key]
+    st.cache_resource.clear()
+    st.cache_data.clear()
+    st.session_state.session_id = str(time.time())
+    st.session_state.initial_cleanup = True
+    st.rerun()
+
 if 'flag_uploaded' not in st.session_state:
         st.session_state.flag_uploaded = None
 if 'chat_history' not in st.session_state:
@@ -37,11 +46,10 @@ def setup_environment():
     st.title('🤖ChatBot with RAG on PDF📘')
 
     model = ChatGroq(groq_api_key=groq_api_key, model_name='llama3-8b-8192')
-    if 'flag_uploaded' not in st.session_state:
-        st.session_state.flag_uploaded = None
-    if 'chat_history' not in st.session_state:
-        st.session_state.chat_history = ChatMessageHistory()
 
+    if 'retriever' not in st.session_state:
+        st.session_state.retriever = None
+    
     return model, embeddings
 
 with st.spinner('Configuring the environment'):
@@ -54,6 +62,8 @@ def file_upload():
     if 'retriever' in st.session_state and 'vectorstore' in st.session_state:
         st.session_state.pop('retriever')
         st.session_state.pop('vectorstore')
+        st.session_state.pop('chat_history')
+        st.session_state.chat_history = ChatMessageHistory()
     documents = []
     for pdf in pdfs:
         with st.sidebar.status('Reading PDFs'):
@@ -61,12 +71,10 @@ def file_upload():
             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
                 temp_file.write(pdf_bytes)
                 temp_file_path = temp_file.name
-            
             try:
                 loader = PyPDFLoader(file_path=temp_file_path)
                 docs = loader.load()
                 documents.extend(docs)
-              
             finally:
                 os.remove(temp_file_path)
 
@@ -98,7 +106,7 @@ contextualize_q_prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-if st.session_state.flag_uploaded:
+if st.session_state.flag_uploaded and 'retriever' in st.session_state:
     st.success('Now ask questions from PDF', icon='🙂')
     history_aware_retriever = create_history_aware_retriever(model, st.session_state.retriever, contextualize_q_prompt)
 
@@ -134,7 +142,7 @@ if st.session_state.flag_uploaded:
     user_input = st.chat_input('Ask here')
     if user_input:
         with st.toast('Thinking...', icon="🤔"):
-            response = conversational_rag_chain.invoke({'input': user_input})
+            response = conversational_rag_chain.invoke({'input': user_input},{'configurable': {'session_id': st.session_state.session_id}})
         for message in session_history.messages:
             if message.type == 'human':
                 with st.chat_message('user'):
