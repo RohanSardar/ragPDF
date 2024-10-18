@@ -83,7 +83,7 @@ def file_upload():
     splits = text_splitter.split_documents(documents)
     st.session_state.flag_file_uploaded = True
 
-    if "retriever" not in st.session_state and st.session_state.flag_file_uploaded:
+    if "retriever" in st.session_state and st.session_state.flag_file_uploaded:
         with st.sidebar.status('Creating Vector DB'):
             st.session_state.vectorstore = FAISS.from_documents(documents=splits, embedding=embeddings)
             st.session_state.retriever = st.session_state.vectorstore.as_retriever()
