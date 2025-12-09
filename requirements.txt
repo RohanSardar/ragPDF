@@ -1,4 +1,4 @@
-langchain
+langchain-classic
 langchain-community
 pypdf
 langchain-groq
