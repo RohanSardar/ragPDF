@@ -1,9 +1,9 @@
 langchain
-langchain_community
+langchain-community
 pypdf
 langchain-groq
 langchain-text-splitters
-sentence_transformers
-langchain_huggingface
-langchain_chroma
+sentence-transformers
+langchain-huggingface
 faiss-cpu
+streamlit
